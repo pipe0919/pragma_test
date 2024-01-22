@@ -1,15 +1,13 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test_pragma_app/src/core/inyeccion_dependency/injection_dependency.dart';
 
-import '../../data/models/cat_breed_image_model.dart';
 import '../cubit/home_cubit.dart';
 import '../widgets/cat_info_widget.dart';
 
 class HomeScreen extends StatefulWidget {
-  static const String routeName = '/home';
   const HomeScreen({super.key});
+  static const String routeName = '/home';
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -40,14 +38,14 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             body: state.isLoading
                 ? const Center(child: CircularProgressIndicator())
-                : _body(),
+                : _body(state),
           );
         },
       ),
     );
   }
 
-  Widget _body() {
+  Widget _body(HomeState state) {
     return Center(
       child: Column(
         children: [
@@ -62,30 +60,37 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
-          Expanded(
-            child: BlocBuilder<HomeCubit, HomeState>(
-              builder: (context, state) {
-                return ListView.builder(
-                  itemCount: state.cats.length,
-                  itemBuilder: (context, index) {
-                    return FutureBuilder<CatImageModel>(
-                      key: UniqueKey(),
-                      future:
-                          _homeCubit.getCatImage(catId: state.cats[index].id),
-                      builder:
-                          (context, AsyncSnapshot<CatImageModel> snapshot) {
-                        return CatInfoWidget(
-                          cat: state.cats[index],
-                          homeCubit: _homeCubit,
-                        );
-                      },
-                    );
-                  },
-                );
-              },
-            ),
-          ),
+          _builderOfCatsList(state)
         ],
+      ),
+    );
+  }
+
+  Expanded _builderOfCatsList(HomeState state) {
+    print("llamando al _builderOfCatsList Aegean");
+    return Expanded(
+      child: ListView.builder(
+        itemCount: state.cats.length,
+        itemBuilder: (context, index) {
+          if (state.cats[index].isImageLoad) {
+            return CatInfoWidget(
+              key: UniqueKey(),
+              cat: state.cats[index],
+            );
+          } else {
+            print(
+                "llamando a la funcion getCatImage ${state.cats[index].name}");
+            return FutureBuilder(
+              future: state.cats[index].isImageLoad
+                  ? Future.value(state.cats[index])
+                  : _homeCubit.getCatImage(cat: state.cats[index]),
+              builder: (_, __) => CatInfoWidget(
+                key: UniqueKey(),
+                cat: state.cats[index],
+              ),
+            );
+          }
+        },
       ),
     );
   }

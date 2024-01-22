@@ -21,7 +21,7 @@ class Dependencies {
 
   Future<void> _registerBlocs() async {
     sl.registerFactory(
-      () => HomeCubit(sl(), sl()),
+      () => HomeCubit(sl(), sl())..getCatsBreeds(),
     );
   }
 

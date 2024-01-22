@@ -1,7 +1,10 @@
+import '../../data/models/cat_breed_image_model.dart';
 import '../../data/models/cat_breed_weight_model.dart';
 
 class CatBreedsEntity {
   final WeightModel weight;
+  final CatImageModel? image;
+  final bool isImageLoad;
   final String id;
   final String name;
   final String? cfaUrl;
@@ -43,6 +46,8 @@ class CatBreedsEntity {
 
   CatBreedsEntity({
     required this.weight,
+    this.image,
+    required this.isImageLoad,
     required this.id,
     required this.name,
     this.cfaUrl,
