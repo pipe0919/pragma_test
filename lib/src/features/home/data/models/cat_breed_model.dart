@@ -1,19 +1,9 @@
-import 'dart:convert';
-
 import '../../domain/entities/cat_breed_entity.dart';
-import 'cat_breed_image_model.dart';
 import 'cat_breed_weight_model.dart';
 
 class CatBreedsModel extends CatBreedsEntity {
-  List<CatBreedsModel> catBreedsModelFromJson(String str) =>
-      List<CatBreedsModel>.from(json.decode(str).map(
-            (x) => CatBreedsModel.fromJson(x),
-          ));
-
   CatBreedsModel({
     required super.weight,
-    super.image,
-    required super.isImageLoad,
     required super.id,
     required super.name,
     super.cfaUrl,
@@ -56,7 +46,6 @@ class CatBreedsModel extends CatBreedsEntity {
 
   factory CatBreedsModel.fromJson(Map<String, dynamic> json) => CatBreedsModel(
         weight: WeightModel.fromJson(json["weight"]),
-        isImageLoad: false,
         id: json["id"],
         name: json["name"],
         cfaUrl: json["cfa_url"],
@@ -100,7 +89,6 @@ class CatBreedsModel extends CatBreedsEntity {
   CatBreedsModel copyWith({
     WeightModel? weight,
     bool? isImageLoad,
-    CatImageModel? image,
     String? id,
     String? name,
     String? cfaUrl,
@@ -141,9 +129,7 @@ class CatBreedsModel extends CatBreedsEntity {
     int? bidability,
   }) {
     return CatBreedsModel(
-      image: image ?? this.image,
       weight: weight ?? this.weight,
-      isImageLoad: isImageLoad ?? this.isImageLoad,
       id: id ?? this.id,
       name: name ?? this.name,
       cfaUrl: cfaUrl ?? this.cfaUrl,

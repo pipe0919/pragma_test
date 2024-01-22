@@ -1,21 +1,31 @@
+import 'dart:async';
+
 import 'package:dartz/dartz.dart';
-import 'package:test_pragma_app/src/features/home/data/models/cat_breed_image_model.dart';
 
 import '../../../../core/erros/erros.dart';
 import '../../domain/repositories/home_repository.dart';
 import '../models/cat_breed_model.dart';
-import '../services/auth_session_service.dart';
+import '../services/local/home_local_service.dart';
+import '../services/network/home_network_service.dart';
 
 class HomeRepositoryImpl implements HomeRepository {
   final HomeService _homeService;
+  // final HomeLocalServiceImpl _homeLocalServiceImpl;
 
   HomeRepositoryImpl(
     this._homeService,
+    // this._homeLocalServiceImpl,
   );
 
   @override
   Future<Either<ErrorModel, List<CatBreedsModel>>> getCatsBreeds() async {
     try {
+      // final catsFromLocalStorage = _homeLocalServiceImpl.getCatsBreeds();
+      // if (catsFromLocalStorage.isNotEmpty) {
+      //   return Right(
+      //     await Future<List<CatBreedsModel>>.value(catsFromLocalStorage),
+      //   );
+      // }
       return Right(
         await _homeService.getCatsBreeds(),
       );
@@ -23,25 +33,6 @@ class HomeRepositoryImpl implements HomeRepository {
       return Left(
         ErrorModel(
           code: 'Error obteniendo la lista de gatos',
-        ),
-      );
-    }
-  }
-
-  @override
-  Future<Either<ErrorModel, CatImageModel>> getCatImage({
-    required String catId,
-  }) async {
-    try {
-      return Right(
-        await _homeService.getCatImage(
-          catId: catId,
-        ),
-      );
-    } catch (e) {
-      return Left(
-        ErrorModel(
-          code: 'Error obteniendo la imagen del gato',
         ),
       );
     }

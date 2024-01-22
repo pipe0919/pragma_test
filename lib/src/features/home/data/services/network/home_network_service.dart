@@ -1,13 +1,9 @@
 import 'package:dio/dio.dart';
 
-import '../models/cat_breed_image_model.dart';
-import '../models/cat_breed_model.dart';
+import '../../models/cat_breed_model.dart';
 
 abstract class HomeService {
   Future<List<CatBreedsModel>> getCatsBreeds();
-  Future<CatImageModel> getCatImage({
-    required String catId,
-  });
 }
 
 class HomeServiceImpl implements HomeService {
@@ -32,24 +28,6 @@ class HomeServiceImpl implements HomeService {
       }
 
       return cats;
-    } catch (e) {
-      throw Exception('Error getting the cats');
-    }
-  }
-
-  @override
-  Future<CatImageModel> getCatImage({
-    required String catId,
-  }) async {
-    try {
-      final response = await _dioCat.get(
-        '/images/search?breed_ids=$catId',
-      );
-      if (response.statusCode != 200) {
-        throw Exception('Error getting the cats');
-      }
-
-      return CatImageModel.fromJson(response.data[0]);
     } catch (e) {
       throw Exception('Error getting the cats');
     }

@@ -19,7 +19,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     _homeCubit = sl<HomeCubit>();
-    _homeCubit.getCatsBreeds();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      await _homeCubit.getCatsBreeds();
+    });
     super.initState();
   }
 
@@ -58,6 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 prefixIcon: Icon(Icons.search),
                 border: OutlineInputBorder(),
               ),
+              onChanged: _homeCubit.filterCats,
             ),
           ),
           _builderOfCatsList(state)
@@ -66,30 +69,21 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Expanded _builderOfCatsList(HomeState state) {
-    print("llamando al _builderOfCatsList Aegean");
+  Widget _builderOfCatsList(HomeState state) {
+    if (state.filterCats.isEmpty) {
+      return const Center(
+        child: Text("Data not Found"),
+      );
+    }
+
     return Expanded(
       child: ListView.builder(
-        itemCount: state.cats.length,
+        itemCount: state.filterCats.length,
         itemBuilder: (context, index) {
-          if (state.cats[index].isImageLoad) {
-            return CatInfoWidget(
-              key: UniqueKey(),
-              cat: state.cats[index],
-            );
-          } else {
-            print(
-                "llamando a la funcion getCatImage ${state.cats[index].name}");
-            return FutureBuilder(
-              future: state.cats[index].isImageLoad
-                  ? Future.value(state.cats[index])
-                  : _homeCubit.getCatImage(cat: state.cats[index]),
-              builder: (_, __) => CatInfoWidget(
-                key: UniqueKey(),
-                cat: state.cats[index],
-              ),
-            );
-          }
+          return CatInfoWidget(
+            key: UniqueKey(),
+            cat: state.filterCats[index],
+          );
         },
       ),
     );

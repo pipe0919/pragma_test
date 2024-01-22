@@ -1,12 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-import '../../features/home/data/repositories/auth_session_repository_impl.dart';
-import '../../features/home/data/services/auth_session_service.dart';
+import '../../features/home/data/repositories/home_repository_impl.dart';
+import '../../features/home/data/services/local/home_local_service.dart';
+import '../../features/home/data/services/network/home_network_service.dart';
 import '../../features/home/domain/repositories/home_repository.dart';
-import '../../features/home/domain/use_cases/get_cat_image_use_case.dart';
 import '../../features/home/domain/use_cases/get_cats_breeds_use_case.dart';
 import '../../features/home/ui/cubit/home_cubit.dart';
+import '../shared_prefences/shared_preferences.dart';
 
 final sl = GetIt.instance;
 
@@ -21,13 +23,14 @@ class Dependencies {
 
   Future<void> _registerBlocs() async {
     sl.registerFactory(
-      () => HomeCubit(sl(), sl())..getCatsBreeds(),
+      () => HomeCubit(sl())..getCatsBreeds(),
     );
   }
 
   // RegisterRepository
   Future<void> _registerRepositories() async {
     sl.registerLazySingleton<HomeRepository>(
+      // () => HomeRepositoryImpl(sl(), sl()),
       () => HomeRepositoryImpl(sl()),
     );
   }
@@ -35,9 +38,6 @@ class Dependencies {
   Future<void> _registerUseCases() async {
     sl.registerLazySingleton(
       () => GetCatsBreedsUseCase(sl()),
-    );
-    sl.registerLazySingleton(
-      () => GetCatsImageUseCase(sl()),
     );
   }
 
@@ -49,14 +49,22 @@ class Dependencies {
         ),
       ),
     );
+
+    // sl.registerLazySingleton<HomeLocalService>(
+    //   () => HomeLocalServiceImpl(
+    //     sl(
+    //       instanceName: 'preferences',
+    //     ),
+    //   ),
+    // );
   }
 
   void _registerDio() {
     sl.registerSingleton<Dio>(
       Dio(
         BaseOptions(
-          baseUrl: 'https://api.thecatapi.com/v1',
-          headers: {"x-api-key": "bda53789-d59e-46cd-9bc4-2936630fde39"},
+          baseUrl: dotenv.env['SERVER_API']!,
+          headers: {"x-api-key": dotenv.env['SERVER_API_KEY']!},
           connectTimeout: const Duration(seconds: 20),
           receiveTimeout: const Duration(seconds: 20),
           receiveDataWhenStatusError: true,
@@ -64,5 +72,9 @@ class Dependencies {
       ),
       instanceName: 'dio',
     );
+    // sl.registerSingleton<PreferenciasUsuario>(
+    //   PreferenciasUsuario(),
+    //   instanceName: 'preferences',
+    // );
   }
 }

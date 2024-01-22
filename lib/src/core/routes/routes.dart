@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../app.dart';
 
+import '../../features/home/data/models/cat_breed_model.dart';
 import '../../features/home/ui/screens/cat_detail_screen.dart';
 import '../../features/home/ui/screens/home_screen.dart';
 
@@ -23,9 +24,14 @@ mixin AppRouter on State<MyApp> {
       ),
       GoRoute(
         path: CatDetailScreen.routeName,
-        pageBuilder: (context, state) => const MaterialPage(
-          child: CatDetailScreen(),
-        ),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          final name = state.extra! as CatBreedsModel;
+          return MaterialPage(
+            child: CatDetailScreen(
+              cat: name,
+            ),
+          );
+        },
       ),
     ],
   );
