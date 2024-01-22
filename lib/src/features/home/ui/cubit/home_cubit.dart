@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/inyeccion_dependency/injection_dependency.dart';
+import '../../../../core/shared_prefences/shared_preferences.dart';
 import '../../data/models/cat_breed_model.dart';
 import '../../domain/use_cases/get_cats_breeds_use_case.dart';
 
@@ -25,6 +29,7 @@ class HomeCubit extends Cubit<HomeState> {
       },
       (r) {
         _setCats(r);
+        _setLocalCats(r);
         _setInitialFilterCats(r);
         updateLoading(false);
       },
@@ -57,6 +62,11 @@ class HomeCubit extends Cubit<HomeState> {
         cats: List.unmodifiable(cats),
       ),
     );
+  }
+
+  void _setLocalCats(List<CatBreedsModel> cats) {
+    final prefs = sl<PreferenciasUsuario>(instanceName: 'preferences');
+    prefs.catList = cats.map((cat) => jsonEncode(cat.toJson())).toList();
   }
 
   void _setInitialFilterCats(List<CatBreedsModel> cats) {

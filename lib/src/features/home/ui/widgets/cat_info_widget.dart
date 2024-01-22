@@ -76,7 +76,7 @@ class CatInfoWidget extends StatelessWidget {
                   width: 250,
                   child: Center(child: CircularProgressIndicator()),
                 ),
-                errorWidget: (_, __, ___) => Container(
+                errorWidget: (_, __, ___) => SizedBox(
                   height: 350,
                   width: 250,
                   child: Image.network(StringUtils.getCatImage()),

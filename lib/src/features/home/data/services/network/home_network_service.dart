@@ -2,14 +2,14 @@ import 'package:dio/dio.dart';
 
 import '../../models/cat_breed_model.dart';
 
-abstract class HomeService {
+abstract class HomeNetworkService {
   Future<List<CatBreedsModel>> getCatsBreeds();
 }
 
-class HomeServiceImpl implements HomeService {
+class HomeNetworkServiceImpl implements HomeNetworkService {
   final Dio _dioCat;
 
-  HomeServiceImpl(
+  HomeNetworkServiceImpl(
     this._dioCat,
   );
 

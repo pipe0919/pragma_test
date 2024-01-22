@@ -30,8 +30,7 @@ class Dependencies {
   // RegisterRepository
   Future<void> _registerRepositories() async {
     sl.registerLazySingleton<HomeRepository>(
-      // () => HomeRepositoryImpl(sl(), sl()),
-      () => HomeRepositoryImpl(sl()),
+      () => HomeRepositoryImpl(sl(), sl()),
     );
   }
 
@@ -42,21 +41,19 @@ class Dependencies {
   }
 
   Future<void> _registerDataSources() async {
-    sl.registerLazySingleton<HomeService>(
-      () => HomeServiceImpl(
+    sl.registerLazySingleton<HomeNetworkService>(
+      () => HomeNetworkServiceImpl(
         sl(
           instanceName: 'dio',
         ),
       ),
     );
 
-    // sl.registerLazySingleton<HomeLocalService>(
-    //   () => HomeLocalServiceImpl(
-    //     sl(
-    //       instanceName: 'preferences',
-    //     ),
-    //   ),
-    // );
+    sl.registerLazySingleton<HomeLocalService>(
+      () => HomeLocalServiceImpl(
+        sl(instanceName: 'preferences'),
+      ),
+    );
   }
 
   void _registerDio() {
@@ -72,9 +69,9 @@ class Dependencies {
       ),
       instanceName: 'dio',
     );
-    // sl.registerSingleton<PreferenciasUsuario>(
-    //   PreferenciasUsuario(),
-    //   instanceName: 'preferences',
-    // );
+    sl.registerFactory<PreferenciasUsuario>(
+      () => PreferenciasUsuario(),
+      instanceName: 'preferences',
+    );
   }
 }
